@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: ums
+    password: umsStPetersburg
+    url: jdbc:postgresql://localhost:5432/ums
+  jpa:
+    properties:
+      # suppress "Method org.postgresql.jdbc.PgConnection.createClob() is not yet implemented."
+      hibernate.temp.use_jdbc_metadata_defaults: false
+    hibernate:
+      ddl-auto: update
+  flyway:
+    # fixme:  temporary, enable it after create db architecture
+    enabled: false
+logging:
+  level:
+    # Enable hibernate query logging
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
