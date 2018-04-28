@@ -1,9 +1,6 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    username: ums
-    password: umsStPetersburg
-    url: jdbc:postgresql://localhost:5432/ums
   jpa:
     properties:
       # suppress "Method org.postgresql.jdbc.PgConnection.createClob() is not yet implemented."
