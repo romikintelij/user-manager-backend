@@ -33,6 +33,10 @@ public class Credentials {
         this.password = password;
     }
 
+    public Credentials(Credentials source) {
+        this(source.getUsername(), source.getPassword());
+    }
+
     private boolean isEmpty(String val) {
         return val == null || val.isEmpty();
     }

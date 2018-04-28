@@ -11,6 +11,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -55,6 +56,10 @@ public class User {
 
     public Credentials getCredentials() {
         return credentials;
+    }
+
+    public void setCredentials(Credentials credentials) {
+        this.credentials = Objects.requireNonNull(credentials, "credentials must be not null");
     }
 
     public PersonalDetails getPersonalDetails() {

@@ -7,7 +7,7 @@ public class GroupModel {
     private String name;
 
     public GroupModel() {
-        // hibernate
+        // deserialization
     }
 
     public GroupModel(Group group) {

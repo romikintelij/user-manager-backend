@@ -1,7 +1,5 @@
 package zab.romik.usermanagement.usermanagement.users.model;
 
-import zab.romik.usermanagement.usermanagement.groups.model.GroupModel;
-
 import java.util.HashSet;
 import java.util.Set;
 

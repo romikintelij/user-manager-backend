@@ -72,6 +72,7 @@ public interface UserService {
      */
     Collection<UserModel> loadAllUsers();
 
+    // todo: may be move methods that works with group to self service?
     Collection<GroupModel> fetchUserGroups(long userId);
 
     Collection<GroupModel> linkUserToGroups(long userId, Set<Long> groupIds);

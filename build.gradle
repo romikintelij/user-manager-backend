@@ -35,6 +35,7 @@ dependencies {
 
     // for fix java 9 - 10 problems with jaxb
     compile('javax.xml.bind:jaxb-api:2.2.11')
+    compile('com.google.guava:guava:25.0-jre')
 
     // test dependencies
     testCompile('org.springframework.boot:spring-boot-starter-test')

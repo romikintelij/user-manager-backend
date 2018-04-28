@@ -23,13 +23,16 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
     private final Users users;
     private final Groups groups;
+    private final PasswordEncoder pwdEncoder;
 
     /**
      * @param users интерфейс для доступа к данным пользователя
      */
-    public UserServiceImpl(Users users, Groups groups) {
+    public UserServiceImpl(Users users, Groups groups,
+                           PasswordEncoder pwdEncoder) {
         this.users = users;
         this.groups = groups;
+        this.pwdEncoder = pwdEncoder;
     }
 
     @Override
@@ -50,7 +53,9 @@ public class UserServiceImpl implements UserService {
      * @return представление данных для авторизации
      */
     private Credentials createCredentials(NewUser user) {
-        return new Credentials(user.getUsername(), user.getPassword());
+        var hashedPassword = pwdEncoder.encode(user.getPassword());
+
+        return new Credentials(user.getUsername(), hashedPassword);
     }
 
     /**
@@ -111,16 +116,33 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserModel update(long userId, NewUser model) {
         var user = obtainUserById(userId);
-        var credentials = user.getCredentials();
+        var credentials = makeNewCredentialsWithUpdate(user.getCredentials(), model);
 
-        if (!credentials.getUsername().equals(model.getUsername())) {
-            var username = model.getUsername();
-            // user change username, need check new name is unique
-            assertUniqueUserName(username);
-            credentials.setUsername(username);
-        }
+        user.setCredentials(credentials);
 
         return new UserModel(commonUserPersist(user, model));
+    }
+
+    /**
+     * Этот метод просто обновляет данные авторизации в моделе пользователя
+     *
+     * @param source исходный класс
+     * @param req    запрос пользователя
+     * @return обновленные данные авторизации
+     */
+    private Credentials makeNewCredentialsWithUpdate(Credentials source, NewUser req) {
+        var credentials = new Credentials(source);
+
+        if (!credentials.getUsername().equals(req.getUsername())) {
+            credentials.setUsername(req.getUsername());
+        }
+
+        var pwd = req.getPassword();
+        if (!(pwd == null || !pwd.isEmpty())) {
+            credentials.setPassword(pwdEncoder.encode(pwd));
+        }
+
+        return credentials;
     }
 
     /**
@@ -174,6 +196,12 @@ public class UserServiceImpl implements UserService {
         return convertUserGroupsToGroupModel(user.getGroups());
     }
 
+    /**
+     * Этот метод просто конвертирует множество групп в множество представлений групп
+     *
+     * @param groups множество входных групп
+     * @return коллекция моделей групп
+     */
     private Collection<GroupModel> convertUserGroupsToGroupModel(Set<Group> groups) {
         return groups.stream().map(GroupModel::new).collect(Collectors.toList());
     }

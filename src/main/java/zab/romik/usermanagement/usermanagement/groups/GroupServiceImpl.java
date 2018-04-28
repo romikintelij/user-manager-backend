@@ -1,10 +1,12 @@
 package zab.romik.usermanagement.usermanagement.groups;
 
+import org.springframework.transaction.annotation.Transactional;
 import zab.romik.usermanagement.usermanagement.groups.domain.Group;
 import zab.romik.usermanagement.usermanagement.groups.model.GroupModel;
 
 import java.util.List;
 
+@Transactional
 public class GroupServiceImpl implements GroupService {
     private final Groups groups;
 
