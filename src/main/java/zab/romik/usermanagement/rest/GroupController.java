@@ -27,7 +27,7 @@ public class GroupController {
     }
 
     @GetMapping
-    public List<Group> findAllGroups() {
+    public List<GroupModel> findAllGroups() {
         return groupService.findAllGroups();
     }
 

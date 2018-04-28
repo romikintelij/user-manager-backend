@@ -3,8 +3,12 @@ package zab.romik.usermanagement.usermanagement.groups;
 import org.springframework.transaction.annotation.Transactional;
 import zab.romik.usermanagement.usermanagement.groups.domain.Group;
 import zab.romik.usermanagement.usermanagement.groups.model.GroupModel;
+import zab.romik.usermanagement.usermanagement.users.model.UserModel;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Transactional
 public class GroupServiceImpl implements GroupService {
@@ -39,12 +43,21 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public List<Group> findAllGroups() {
-        return groups.findAll();
+    public List<GroupModel> findAllGroups() {
+        return convertCollectionTo(groups.findAll(), GroupModel::new);
     }
 
     @Override
     public GroupModel findById(long id) {
         return new GroupModel(obtainGroup(id));
+    }
+
+    @Override
+    public List<UserModel> findUsersInGroup(long groupId) {
+        return convertCollectionTo(obtainGroup(groupId).getUsers(), UserModel::new);
+    }
+
+    private <R, I> List<R> convertCollectionTo(Collection<I> input, Function<I, R> mapper) {
+        return input.stream().map(mapper).collect(Collectors.toList());
     }
 }

@@ -133,7 +133,8 @@ public class UserServiceImpl implements UserService {
     private Credentials makeNewCredentialsWithUpdate(Credentials source, NewUser req) {
         var credentials = new Credentials(source);
 
-        if (!credentials.getUsername().equals(req.getUsername())) {
+        var reqUserName = req.getUsername().trim();
+        if (!credentials.getUsername().equals(reqUserName)) {
             credentials.setUsername(req.getUsername());
         }
 
@@ -168,7 +169,7 @@ public class UserServiceImpl implements UserService {
      * @param groupIds группы которые надо привязать к пользователю
      * @return пользователь с привязанными группами
      */
-    private User linkToGroups(User user, Set<java.lang.Long> groupIds) {
+    private User linkToGroups(User user, Set<Long> groupIds) {
         var foundedGroups = groups.findAllByIdIn(groupIds);
         if (foundedGroups.isEmpty()) {
             return user;
@@ -204,13 +205,5 @@ public class UserServiceImpl implements UserService {
      */
     private Collection<GroupModel> convertUserGroupsToGroupModel(Set<Group> groups) {
         return groups.stream().map(GroupModel::new).collect(Collectors.toList());
-    }
-
-    @Override
-    public Collection<GroupModel> linkUserToGroups(long userId, Set<Long> groupIds) {
-        var user = obtainUserById(userId);
-        users.save(linkToGroups(user, groupIds));
-
-        return convertUserGroupsToGroupModel(user.getGroups());
     }
 }

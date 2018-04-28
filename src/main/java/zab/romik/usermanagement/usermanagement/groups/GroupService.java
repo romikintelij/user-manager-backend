@@ -2,6 +2,7 @@ package zab.romik.usermanagement.usermanagement.groups;
 
 import zab.romik.usermanagement.usermanagement.groups.domain.Group;
 import zab.romik.usermanagement.usermanagement.groups.model.GroupModel;
+import zab.romik.usermanagement.usermanagement.users.model.UserModel;
 
 import java.util.List;
 
@@ -14,5 +15,7 @@ public interface GroupService {
 
     GroupModel findById(long id);
 
-    List<Group> findAllGroups();
+    List<GroupModel> findAllGroups();
+
+    List<UserModel> findUsersInGroup(long groupId);
 }
