@@ -5,6 +5,8 @@ spring:
     properties:
       # suppress "Method org.postgresql.jdbc.PgConnection.createClob() is not yet implemented."
       hibernate.temp.use_jdbc_metadata_defaults: false
+  profiles:
+    active: dev
 logging:
   level:
     # Enable hibernate query logging
