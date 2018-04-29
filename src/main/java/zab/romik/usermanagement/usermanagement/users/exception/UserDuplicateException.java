@@ -4,6 +4,6 @@ import zab.romik.usermanagement.usermanagement.BusinessLogicException;
 
 public class UserDuplicateException extends BusinessLogicException {
     public UserDuplicateException(String userName) {
-        super("User with username'" + userName + "' already found");
+        super("User with username '" + userName + "' already found");
     }
 }

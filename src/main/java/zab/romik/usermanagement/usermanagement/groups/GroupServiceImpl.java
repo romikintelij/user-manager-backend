@@ -11,17 +11,35 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * class implements interface GroupService
+ *
+ */
 @Transactional
 public class GroupServiceImpl implements GroupService {
+
+    /**
+     * variables for working with groups
+     */
     private final Groups groups;
 
+    /**
+     * class constructor
+     * @param groups
+     */
     public GroupServiceImpl(Groups groups) {
         this.groups = groups;
     }
 
+
+    /**
+     * creating new group
+     * @param model
+     * @return 
+     */
     @Override
     public GroupModel create(GroupModel model) {
-        var group = groups.save(new Group(model.getName()));
+        Group group = groups.save(new Group(model.getName()));
 
         return new GroupModel(group);
     }
@@ -37,7 +55,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public GroupModel update(long id, GroupModel model) {
-        var group = obtainGroup(id);
+        Group group = obtainGroup(id);
         group.setName(model.getName());
 
         return new GroupModel(groups.save(group));

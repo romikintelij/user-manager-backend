@@ -3,13 +3,7 @@ package zab.romik.usermanagement.usermanagement.users.domain;
 import zab.romik.usermanagement.usermanagement.Constants;
 import zab.romik.usermanagement.usermanagement.groups.domain.Group;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -69,4 +63,6 @@ public class User {
     public void setPersonalDetails(PersonalDetails personalDetails) {
         this.personalDetails = personalDetails;
     }
+
+    // todo: сгенерь тут equals + hash code по полю ИД
 }

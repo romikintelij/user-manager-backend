@@ -12,26 +12,54 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import java.util.Set;
 
+/**
+ *
+ * table in a database
+ */
 @Entity
 @Table(name = "groups")
 public class Group {
+
+    /**
+     * id column
+     */
     @Id
     @GeneratedValue(generator = Constants.ID_GENERATOR)
-    private long id;
+    private Long id;
+
+    /**
+     * name column
+     */
     private String name;
 
+    /**
+     * add table for many to many connection between entity tables
+     */
     @ManyToMany
     @JoinTable(
             name = "users_groups",
             joinColumns = @JoinColumn(name = "group_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
+
+    /**
+     * field collection with a users
+     */
     private Set<User> users;
 
+    /**
+     *
+     *  class constructor
+     */
     private Group() {
         // hibernate
     }
 
+    /**
+     *
+     * getters,setters,equals and hash code
+     *
+     */
     public Group(String name) {
         this.name = name;
     }
@@ -54,5 +82,21 @@ public class Group {
 
     public void setUsers(Set<User> users) {
         this.users = users;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Group group = (Group) o;
+
+        return id != null ? id.equals(group.id) : group.id == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
     }
 }

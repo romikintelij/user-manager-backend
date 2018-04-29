@@ -13,6 +13,7 @@ import zab.romik.usermanagement.usermanagement.users.model.NewUser;
 import zab.romik.usermanagement.usermanagement.users.model.UserModel;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -39,8 +40,8 @@ public class UserServiceImpl implements UserService {
     public UserModel create(NewUser userModel) {
         assertUniqueUserName(userModel.getUsername());
 
-        var credentials = createCredentials(userModel);
-        var user = new User(credentials);
+        Credentials credentials = createCredentials(userModel);
+        User user = new User(credentials);
 
         return new UserModel(commonUserPersist(user, userModel));
     }
@@ -53,7 +54,7 @@ public class UserServiceImpl implements UserService {
      * @return представление данных для авторизации
      */
     private Credentials createCredentials(NewUser user) {
-        var hashedPassword = pwdEncoder.encode(user.getPassword());
+        String hashedPassword = pwdEncoder.encode(user.getPassword());
 
         return new Credentials(user.getUsername(), hashedPassword);
     }
@@ -90,7 +91,7 @@ public class UserServiceImpl implements UserService {
      * @param user существующий пользователь
      */
     private void throwDuplicateException(User user) {
-        var credentials = user.getCredentials();
+        Credentials credentials = user.getCredentials();
 
         throw new UserDuplicateException(credentials.getUsername());
     }
@@ -115,8 +116,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserModel update(long userId, NewUser model) {
-        var user = obtainUserById(userId);
-        var credentials = makeNewCredentialsWithUpdate(user.getCredentials(), model);
+        User user = obtainUserById(userId);
+        Credentials credentials = makeNewCredentialsWithUpdate(user.getCredentials(), model);
 
         user.setCredentials(credentials);
 
@@ -131,14 +132,14 @@ public class UserServiceImpl implements UserService {
      * @return обновленные данные авторизации
      */
     private Credentials makeNewCredentialsWithUpdate(Credentials source, NewUser req) {
-        var credentials = new Credentials(source);
+        Credentials credentials = new Credentials(source);
 
-        var reqUserName = req.getUsername().trim();
+        String reqUserName = req.getUsername().trim();
         if (!credentials.getUsername().equals(reqUserName)) {
             credentials.setUsername(req.getUsername());
         }
 
-        var pwd = req.getPassword();
+        String pwd = req.getPassword();
         if (!(pwd == null || !pwd.isEmpty())) {
             credentials.setPassword(pwdEncoder.encode(pwd));
         }
@@ -155,7 +156,7 @@ public class UserServiceImpl implements UserService {
      * @return сущность пользователя сохраненная в системе
      */
     private User commonUserPersist(User model, NewUser userModel) {
-        var personalDetails = createPersonalDetails(userModel);
+        PersonalDetails personalDetails = createPersonalDetails(userModel);
         model.setPersonalDetails(personalDetails);
 
         return users.save(linkToGroups(model, userModel.getGroupIds()));
@@ -170,7 +171,7 @@ public class UserServiceImpl implements UserService {
      * @return пользователь с привязанными группами
      */
     private User linkToGroups(User user, Set<Long> groupIds) {
-        var foundedGroups = groups.findAllByIdIn(groupIds);
+        Set<Group> foundedGroups = groups.findAllByIdIn(groupIds);
         if (foundedGroups.isEmpty()) {
             return user;
         }
@@ -192,7 +193,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Collection<GroupModel> fetchUserGroups(long userId) {
-        var user = obtainUserById(userId);
+        User user = obtainUserById(userId);
 
         return convertUserGroupsToGroupModel(user.getGroups());
     }

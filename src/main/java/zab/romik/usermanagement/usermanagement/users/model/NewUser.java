@@ -1,5 +1,6 @@
 package zab.romik.usermanagement.usermanagement.users.model;
 
+import javax.validation.constraints.NotEmpty;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -9,6 +10,7 @@ import java.util.Set;
  */
 public class NewUser extends UserModel {
     /** Пароль, здесь пароль не кодированный */
+    @NotEmpty(groups = ValidationGroups.Create.class)
     private String password;
 
     /** Группы к которым надо привязать пользователя */

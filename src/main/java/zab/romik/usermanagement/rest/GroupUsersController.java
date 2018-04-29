@@ -9,15 +9,33 @@ import zab.romik.usermanagement.usermanagement.users.model.UserModel;
 
 import java.util.Collection;
 
+/**
+ *
+ * controller for working with user in a group
+ */
 @RestController
 @RequestMapping("/groups/{id}")
 public class GroupUsersController {
+
+    /**
+     * service for working with  a groups
+     *
+     */
     private final GroupService groupService;
 
+    /**
+     * class constructor
+     * @param groupService
+     */
     public GroupUsersController(GroupService groupService) {
         this.groupService = groupService;
     }
 
+    /**
+     * method loading group  with a users
+     * @param id
+     *
+     */
     @GetMapping("/users")
     public Collection<UserModel> loadUsersInGroup(@PathVariable long id) {
         return groupService.findUsersInGroup(id);

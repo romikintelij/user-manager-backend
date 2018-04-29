@@ -6,7 +6,11 @@ import zab.romik.usermanagement.usermanagement.users.model.UserModel;
 
 import java.util.List;
 
+/**
+ *This interface will be implemented in the GroupService class
+ */
 public interface GroupService {
+
     GroupModel create(GroupModel model);
 
     void delete(long id);

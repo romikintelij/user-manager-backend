@@ -1,30 +1,32 @@
 package zab.romik.usermanagement.usermanagement.users.model;
 
+import zab.romik.usermanagement.usermanagement.users.domain.PersonalDetails;
 import zab.romik.usermanagement.usermanagement.users.domain.User;
 
 import javax.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 
 /**
- * Модель пользователя которая представляет пользователя
+ * Model represents user
+ *
  */
 public class UserModel {
 
-    /** Уникальный ключ пользователя */
+    /** unique key of user */
     private long id;
 
-    /** Имя пользователя */
+    /** user name */
     @NotEmpty
     private String username;
 
-    /** Имя */
+    /** name */
     @NotEmpty
     private String firstName;
 
-    /** Фамилия */
+    /** last name */
     private String lastName;
 
-    /** Дата рождения */
+    /** date of birth */
     private LocalDate dateOfBirth;
 
     public UserModel() {
@@ -35,7 +37,7 @@ public class UserModel {
         this.id = source.getId();
         this.username = source.getCredentials().getUsername();
 
-        var personal = source.getPersonalDetails();
+        PersonalDetails personal = source.getPersonalDetails();
         this.firstName = personal.getFirstName();
         this.lastName = personal.getLastName();
         this.dateOfBirth = personal.getDateOfBirth();

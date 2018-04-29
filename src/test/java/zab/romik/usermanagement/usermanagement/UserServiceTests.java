@@ -20,8 +20,10 @@ import zab.romik.usermanagement.usermanagement.users.domain.User;
 import zab.romik.usermanagement.usermanagement.users.exception.UserDuplicateException;
 import zab.romik.usermanagement.usermanagement.users.exception.UserNotFoundException;
 import zab.romik.usermanagement.usermanagement.users.model.NewUser;
+import zab.romik.usermanagement.usermanagement.users.model.UserModel;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.Set;
 
 @SpringBootTest
@@ -45,28 +47,30 @@ public class UserServiceTests {
 
     @Before
     public void setUp() {
-        var groupId = testEntityManager.persist(new Group(FAKE_GROUP_NAME)).getId();
+        long groupId = testEntityManager.persist(new Group(FAKE_GROUP_NAME)).getId();
 
-        var newUserReq = new NewUser();
+        NewUser newUserReq = new NewUser();
         newUserReq.setUsername(TEST_USERNAME);
         newUserReq.setPassword(TEST_USER_PASSWORD);
         newUserReq.setDateOfBirth(LocalDate.now());
         newUserReq.setFirstName("John");
         newUserReq.setLastName("Doe");
-        newUserReq.setGroupIds(Set.of(groupId));
+
+        Set<Long> groupIds = Collections.singleton(groupId);
+        newUserReq.setGroupIds(groupIds);
 
         this.fixtureUser = newUserReq;
     }
 
     @Test
     public void testCreateNewUser() {
-        var createdUser = userService.create(fixtureUser);
+        UserModel createdUser = userService.create(fixtureUser);
 
         Assert.assertNotNull(createdUser);
         Assert.assertTrue(createdUser.getId() > 0);
 
         // check that user really persisted
-        var user = testEntityManager.find(User.class, createdUser.getId());
+        User user = testEntityManager.find(User.class, createdUser.getId());
 
         Assert.assertNotNull(user);
         Assert.assertEquals(user.getCredentials().getUsername(), TEST_USERNAME);
@@ -74,9 +78,9 @@ public class UserServiceTests {
 
     @Test(expected = UserDuplicateException.class)
     public void testUniqueUserNameException() {
-        var username = fixtureUser.getUsername();
+        String username = fixtureUser.getUsername();
 
-        var user = new User(new Credentials(username, "abcd"));
+        User user = new User(new Credentials(username, "abcd"));
         user.setPersonalDetails(new PersonalDetails("integration", "test", LocalDate.now()));
 
         // create user with username from fixture user
@@ -87,13 +91,13 @@ public class UserServiceTests {
 
     @Test
     public void testPasswordEncoding() {
-        var created = userService.create(fixtureUser);
+        UserModel created = userService.create(fixtureUser);
 
         // paranoid check
         Assert.assertNotNull(created);
 
-        var user = testEntityManager.find(User.class, created.getId());
-        var credentials = user.getCredentials();
+        User user = testEntityManager.find(User.class, created.getId());
+        Credentials credentials = user.getCredentials();
 
         Assert.assertEquals(credentials.getUsername(), TEST_USERNAME);
         Assert.assertNotEquals(credentials.getPassword(), TEST_USER_PASSWORD);
@@ -109,8 +113,8 @@ public class UserServiceTests {
 
     @Test
     public void testFindAlreadyExistedUser() {
-        var created = userService.create(fixtureUser);
-        var founded = userService.loadById(created.getId());
+        UserModel created = userService.create(fixtureUser);
+        UserModel founded = userService.loadById(created.getId());
 
         // we should have same users
         Assert.assertEquals(created.getId(), founded.getId());
@@ -119,12 +123,12 @@ public class UserServiceTests {
 
     @Test
     public void testDeleting() {
-        var userId = userService.create(fixtureUser).getId();
+        long userId = userService.create(fixtureUser).getId();
 
         userService.delete(userId);
 
         // check that user was deleted
-        var userFromDb = testEntityManager.find(User.class, userId);
+        User userFromDb = testEntityManager.find(User.class, userId);
         Assert.assertNull(userFromDb);
     }
 
@@ -135,9 +139,9 @@ public class UserServiceTests {
 
     @Test
     public void testThatUserLinkedToGroups() {
-        var createdUserId = userService.create(fixtureUser).getId();
+        long createdUserId = userService.create(fixtureUser).getId();
 
-        var user = testEntityManager.find(User.class, createdUserId);
+        User user = testEntityManager.find(User.class, createdUserId);
 
         Assert.assertEquals(user.getGroups().size(), fixtureUser.getGroupIds().size());
         Assert.assertEquals(user.getGroups().iterator().next().getName(), FAKE_GROUP_NAME);
@@ -150,18 +154,18 @@ public class UserServiceTests {
 
     @Test
     public void testHappyUpdateCase() {
-        var created = userService.create(fixtureUser);
+        UserModel created = userService.create(fixtureUser);
 
-        var newData = new NewUser();
+        NewUser newData = new NewUser();
         newData.setFirstName("Adam");
         // because username is required
         newData.setUsername(TEST_USERNAME);
 
-        var updated = userService.update(created.getId(), newData);
+        UserModel updated = userService.update(created.getId(), newData);
         // check that returned response contains new data
         Assert.assertEquals(updated.getFirstName(), newData.getFirstName());
 
-        var userInDb = testEntityManager.find(User.class, updated.getId());
+        User userInDb = testEntityManager.find(User.class, updated.getId());
         Assert.assertEquals(userInDb.getPersonalDetails().getFirstName(), updated.getFirstName());
     }
 
