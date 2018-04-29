@@ -2,6 +2,7 @@ package zab.romik.usermanagement.usermanagement.groups;
 
 import org.springframework.transaction.annotation.Transactional;
 import zab.romik.usermanagement.usermanagement.groups.domain.Group;
+import zab.romik.usermanagement.usermanagement.groups.exception.GroupNotFound;
 import zab.romik.usermanagement.usermanagement.groups.model.GroupModel;
 import zab.romik.usermanagement.usermanagement.users.model.UserModel;
 
@@ -31,7 +32,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     private Group obtainGroup(long id) {
-        return groups.findById(id).orElseThrow();
+        return groups.findById(id).orElseThrow(() -> new GroupNotFound(id));
     }
 
     @Override
