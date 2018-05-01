@@ -18,7 +18,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * Сервис работает с данными пользователя, простые crud операции
+ * service works with user data, simple crud operations
  */
 @Transactional
 public class UserServiceImpl implements UserService {
@@ -27,7 +27,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder pwdEncoder;
 
     /**
-     * @param users интерфейс для доступа к данным пользователя
+     * @param users interface for accessing user data
      */
     public UserServiceImpl(Users users, Groups groups,
                            PasswordEncoder pwdEncoder) {
@@ -36,6 +36,11 @@ public class UserServiceImpl implements UserService {
         this.pwdEncoder = pwdEncoder;
     }
 
+    /**
+     * make create new user
+     * @param userModel
+     * @return new user model
+     */
     @Override
     public UserModel create(NewUser userModel) {
         assertUniqueUserName(userModel.getUsername());
@@ -47,11 +52,11 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Вспомогательный метод для того чтобы создать объект с данными авторизации
-     * для пользователя
+     * auxiliary method to create an object with authorization data
+     * for the user
      *
-     * @param user модель пользователя из которой мы должны достать логин и пароль
-     * @return представление данных для авторизации
+     * @param user user model from which we need to get login and password
+     * @return representation of data for authorization
      */
     private Credentials createCredentials(NewUser user) {
         String hashedPassword = pwdEncoder.encode(user.getPassword());
@@ -60,11 +65,11 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Метод для создания объекта который представляет персональные данные пользователя
+     * Method for creating an object that represents the user's personal data
      *
-     * @param userModel модель с данными из которых мы будем заполнять модель
-     *                  с персональными данными
-     * @return представление персональных данных
+     * @param userModel a model with data from which we will fill the model
+     *                    with personal data
+     * @return representation of personal data
      */
     private PersonalDetails createPersonalDetails(UserModel userModel) {
         return new PersonalDetails(
@@ -75,20 +80,19 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Этот метод проверяет что переданное имя пользователя присутствует в единственном
-     * экземпляре в системе.
+     * This method checks that the transmitted user name is present in a single instance in the system.
      *
-     * @param username имя пользователя которое мы должны проверить
+     * @param username username we need to check
      */
     private void assertUniqueUserName(String username) {
         users.findByUsername(username).ifPresent(this::throwDuplicateException);
     }
 
     /**
-     * Вспомогательный метод который создает исключение о том, что пользователь
-     * уже существует в системе
+     * auxiliary method that throws an exception that the user
+     * already exists in the system
      *
-     * @param user существующий пользователь
+     * @param user existing user
      */
     private void throwDuplicateException(User user) {
         Credentials credentials = user.getCredentials();
@@ -96,19 +100,20 @@ public class UserServiceImpl implements UserService {
         throw new UserDuplicateException(credentials.getUsername());
     }
 
+    /** make create new user*/
     @Override
     public UserModel loadById(long id) {
         return new UserModel(obtainUserById(id));
     }
 
     /**
-     * Метод предоставляет возможность получить пользователя по id
+     *  method provides the ability to get the user by id
      * <p>
-     * Этот метод будет выбрасывать исключение когда пользователь по id не был
-     * найден в базе данных
+     *  will throw an exception when the user is not id
+     *  found in database
      *
-     * @param id пользователя которого нам надо получить
-     * @return найденный пользователь
+     * @param id user id of which we need to get
+     * @return found user
      */
     private User obtainUserById(long id) {
         return users.findById(id).orElseThrow(() -> new UserNotFoundException(id));
@@ -125,11 +130,11 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Этот метод просто обновляет данные авторизации в моделе пользователя
+     * This method updates authorization data in the user model
      *
-     * @param source исходный класс
-     * @param req    запрос пользователя
-     * @return обновленные данные авторизации
+     * @param source source class
+     * @param req    user request
+     * @return updated authorization data
      */
     private Credentials makeNewCredentialsWithUpdate(Credentials source, NewUser req) {
         Credentials credentials = new Credentials(source);
@@ -163,12 +168,11 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Привязывает пользователя к группам которые были переданы вместе
-     * с пользователем
+     * Binds the user to the groups that were sent along with the user
      *
-     * @param user     пользователь
-     * @param groupIds группы которые надо привязать к пользователю
-     * @return пользователь с привязанными группами
+     * @param user
+     * @param groupIds groups that need to be bound to the user
+     * @return user with attached groups
      */
     private User linkToGroups(User user, Set<Long> groupIds) {
         Set<Group> foundedGroups = groups.findAllByIdIn(groupIds);
@@ -181,16 +185,19 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
+    /**the method make delete user by id of database*/
     @Override
     public void delete(long id) {
         users.delete(obtainUserById(id));
     }
 
+    /** the method loading all user of database*/
     @Override
     public Collection<UserModel> loadAllUsers() {
         return users.findAll().stream().map(UserModel::new).collect(Collectors.toList());
     }
 
+    /**the method receives all user groups*/
     @Override
     public Collection<GroupModel> fetchUserGroups(long userId) {
         User user = obtainUserById(userId);
@@ -199,10 +206,10 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Этот метод просто конвертирует множество групп в множество представлений групп
+     * This method converts a set of groups into a set of group representations
      *
-     * @param groups множество входных групп
-     * @return коллекция моделей групп
+         * @param groups multiple input groups
+     * @return collection of models of groups
      */
     private Collection<GroupModel> convertUserGroupsToGroupModel(Set<Group> groups) {
         return groups.stream().map(GroupModel::new).collect(Collectors.toList());

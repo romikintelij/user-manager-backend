@@ -10,67 +10,65 @@ import java.util.Collection;
 import java.util.Set;
 
 /**
- * Это простой crud сервис который работает с данными пользователя
+ *  simple crud service that works with user data
  */
 public interface UserService {
 
     /**
-     * Создать нового пользователя в системе.
+     * create new user in a system
      * <p>
-     * Этот метод проверяет пользователя на уникальность, если пользователь
-     * с таким же логином в системе уже существует, то будет выброшено исключение
-     * о дублированном логине
+     * This method checks the user for uniqueness if the user
+     * with the same login in the system already exists, an exception will be thrown
+     * about duplicate login
      *
-     * @param userModel модель пользователя которая дополнена паролем
-     * @return созданный пользователь, представление
-     * @throws UserDuplicateException когда есть пользователь с таким же логином
+     * @param userModel user model which is supplemented with a password
+     * @return created user, view
+     * @throws UserDuplicateException when there is a user with the same login
      */
     UserModel create(NewUser userModel);
 
     /**
-     * Загружает пользователя по id, может выбросить исключение, если
-     * пользователь с переданным id не был найден
+     * Loads a user by id, can throw an exception if
+     * user with the passed id was not found
      *
-     * @param id пользователя которого нужно загрузить
-     * @return найденный пользователь
-     * @throws UserNotFoundException когда пользователя найти не удалось
+     * @param id whose user you want to download
+     * @return found user
+     * @throws UserNotFoundException when the user was not found
      */
     UserModel loadById(long id);
 
     /**
-     * Обновляет пользователя в системе
+     * updates the user in the system
      * <p>
-     * Этот метод может выбросить исключение если нужный пользователь не будет
-     * найден
+     * method can throw an exception if the user you want does not exist
+     * found
      *
-     * @param userId идентификатор пользователя которого хотим отредактировать
-     * @param model  модель которую будем накатывать на пользователя
-     * @return сохраненный пользователь
-     * @throws UserNotFoundException когда пользователя с переданным id не существует
+     * @param userId user ID of which  want to edit
+     * @param model  the model we will roll on the user
+     * @return saved user
+     * @throws UserNotFoundException when the user with the passed id does not exist
      */
     UserModel update(long userId, NewUser model);
 
     /**
-     * Удаляет пользователь с переданным id
+     * Deletes the user with the passed id
      *
-     * Может выбросить исключение когда пользователя с переданным id не существует,
-     * это может значить, что пользователя либо никогда не существовало, либо пользователь
-     * уже был удален
+     * Can throw an exception when the user with the passed id does not exist
      *
-     * @param id пользователя для удаления
-     * @throws UserNotFoundException пользователя с переданным id в системе нет
+     * @param id user for deletion
+     * @throws UserNotFoundException user with the transmitted id in the system is not present
      */
     void delete(long id);
 
     /**
-     * Загружает коллекцию всех пользователей в системе
+     * loads a collection of all users in the system
      *
-     * В будущем можно добавить метод с пагинацией
-     *
-     * @return коллекция пользователей в системе, никогда не возвращается
-     * {@code null}
      */
     Collection<UserModel> loadAllUsers();
 
+    /**
+     *
+     * loads a collection of all groups in the system
+     */
     Collection<GroupModel> fetchUserGroups(long userId);
 }

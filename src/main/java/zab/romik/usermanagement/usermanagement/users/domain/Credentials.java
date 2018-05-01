@@ -3,22 +3,34 @@ package zab.romik.usermanagement.usermanagement.users.domain;
 import javax.persistence.Embeddable;
 
 /**
- * Этот класс используется для того чтобы представить данные авторизации пользователя
+ * class is used to represent user authorization data
  */
 @Embeddable
 public class Credentials {
+
+    /**
+     * name field
+     */
     private String username;
+
+    /**
+     * password field
+     */
     private String password;
 
+    /**
+     * default class constructor
+     */
     private Credentials() {
         // hibernate
     }
 
     /**
-     * Создает объект данных авторизации для пользователя
+     * class consructor
+     * Creates an authorization data object for the user
      *
-     * @param username имя пользователя, обязательное поле
-     * @param password пароль пользователя, обязательное поле
+     * @param username user name, required field
+     * @param password user password, required field
      */
     public Credentials(String username, String password) {
         if (isEmpty(username)) {
@@ -33,14 +45,28 @@ public class Credentials {
         this.password = password;
     }
 
+    /**
+     * class constructor
+     * @param source
+     */
     public Credentials(Credentials source) {
+
         this(source.getUsername(), source.getPassword());
     }
 
+    /**
+     * checks fields for emptiness
+     * @param val
+     * @return
+     */
     private boolean isEmpty(String val) {
         return val == null || val.isEmpty();
     }
 
+    /**
+     * getters ,setters
+     * @return
+     */
     public String getUsername() {
         return username;
     }

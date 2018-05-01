@@ -33,9 +33,9 @@ public class GroupServiceImpl implements GroupService {
 
 
     /**
-     * creating new group
+     * creating new group and save into database
      * @param model
-     * @return 
+     * @return new GroupModel
      */
     @Override
     public GroupModel create(GroupModel model) {
@@ -44,15 +44,30 @@ public class GroupServiceImpl implements GroupService {
         return new GroupModel(group);
     }
 
+    /**
+     * make delete group
+     * @param id
+     */
     @Override
     public void delete(long id) {
         groups.delete(obtainGroup(id));
     }
 
+    /**
+     * method obtain group of database by id or throw exception when group was not found
+     * @param id
+     *
+     */
     private Group obtainGroup(long id) {
         return groups.findById(id).orElseThrow(() -> new GroupNotFound(id));
     }
 
+    /**
+     * method make update group
+     * @param id
+     * @param model
+     * @return save updated group into database
+     */
     @Override
     public GroupModel update(long id, GroupModel model) {
         Group group = obtainGroup(id);
@@ -61,21 +76,43 @@ public class GroupServiceImpl implements GroupService {
         return new GroupModel(groups.save(group));
     }
 
+    /**
+     * method make select all groups of database to group model
+     * @return convert to group model list
+     */
     @Override
     public List<GroupModel> findAllGroups() {
         return convertCollectionTo(groups.findAll(), GroupModel::new);
     }
 
+    /**
+     * make select chosen group by id
+     * @param id
+     * @return
+     */
     @Override
     public GroupModel findById(long id) {
         return new GroupModel(obtainGroup(id));
     }
 
+    /**
+     * method searching users in a group
+     * @param groupId
+     * @return
+     */
     @Override
     public List<UserModel> findUsersInGroup(long groupId) {
         return convertCollectionTo(obtainGroup(groupId).getUsers(), UserModel::new);
     }
 
+    /**
+     * method make convert collection groups from database to groups model collection
+     * @param input
+     * @param mapper
+     * @param <R>
+     * @param <I>
+     * @return
+     */
     private <R, I> List<R> convertCollectionTo(Collection<I> input, Function<I, R> mapper) {
         return input.stream().map(mapper).collect(Collectors.toList());
     }

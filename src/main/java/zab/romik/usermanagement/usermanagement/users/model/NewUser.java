@@ -5,17 +5,19 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Эта модель используется для того чтобы создавать и обновлять пользователя,
- * потому что здесь есть пароль.
+ *
+ *This model is used to create and update a user
+ *
  */
 public class NewUser extends UserModel {
-    /** Пароль, здесь пароль не кодированный */
+    /** password field must be not empty */
     @NotEmpty(groups = ValidationGroups.Create.class)
     private String password;
 
-    /** Группы к которым надо привязать пользователя */
+    /** groups to which you must bind the user */
     private Set<Long> groupIds = new HashSet<>();
 
+    /** getters,setters*/
     public Set<Long> getGroupIds() {
         return groupIds;
     }

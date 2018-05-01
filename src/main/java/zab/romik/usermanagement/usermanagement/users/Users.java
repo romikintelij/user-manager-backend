@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Этот интерфейс должен использоваться для доступа к данным. В пакете бизнес
- * логики этот интерфейс реализовываться не должен, потому что наш слой бизнес
- * логики не должен зависить от баз данных и интерфейсов фреймворка, это у нас
- * делается на первом уровне архитектуры
+ * This interface should be used to access data. In the package business
+ *logic, this interface should not be implemented, because our layer of business
+ *logic should not depend on the databases and interfaces of the framework, this is for us
+ *is done on the first level of architecture
  */
 public interface Users {
     Optional<User> findById(long id);

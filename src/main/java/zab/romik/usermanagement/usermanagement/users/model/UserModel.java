@@ -29,10 +29,12 @@ public class UserModel {
     /** date of birth */
     private LocalDate dateOfBirth;
 
+    /**default class constructor*/
     public UserModel() {
         // for extending
     }
 
+    /** class constructor with parameters*/
     public UserModel(User source) {
         this.id = source.getId();
         this.username = source.getCredentials().getUsername();
@@ -43,6 +45,7 @@ public class UserModel {
         this.dateOfBirth = personal.getDateOfBirth();
     }
 
+    /**getters,setters*/
     public long getId() {
         return id;
     }

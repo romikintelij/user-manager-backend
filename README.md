@@ -1,8 +1,8 @@
 #### Requirements
 
-- JDK 10
+- JDK 8
 - Gradle
-- Postgresql
+- mySQL
 
 #### Build
 
