@@ -1,10 +1,10 @@
 package zab.romik.usermanagement.usermanagement.groups.domain;
 
-import zab.romik.usermanagement.usermanagement.Constants;
 import zab.romik.usermanagement.usermanagement.users.domain.User;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -24,7 +24,7 @@ public class Group {
      * id column
      */
     @Id
-    @GeneratedValue(generator = Constants.ID_GENERATOR)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**
@@ -41,10 +41,6 @@ public class Group {
             joinColumns = @JoinColumn(name = "group_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-
-    /**
-     * field collection with a users
-     */
     private Set<User> users;
 
     /**
@@ -64,7 +60,7 @@ public class Group {
         this.name = name;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 

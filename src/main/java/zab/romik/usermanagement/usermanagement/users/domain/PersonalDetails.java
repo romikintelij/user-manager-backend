@@ -1,5 +1,6 @@
 package zab.romik.usermanagement.usermanagement.users.domain;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.time.LocalDate;
 
@@ -12,6 +13,7 @@ public class PersonalDetails {
     /**
      * first name field
      */
+    @Column(nullable = false)
     private String firstName;
 
     /**

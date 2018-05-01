@@ -1,5 +1,6 @@
 package zab.romik.usermanagement.usermanagement.users.domain;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 /**
@@ -11,11 +12,13 @@ public class Credentials {
     /**
      * name field
      */
+    @Column(unique = true, nullable = false)
     private String username;
 
     /**
      * password field
      */
+    @Column(nullable = false)
     private String password;
 
     /**

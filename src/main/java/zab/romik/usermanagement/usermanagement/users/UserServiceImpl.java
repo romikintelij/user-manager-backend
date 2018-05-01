@@ -100,7 +100,9 @@ public class UserServiceImpl implements UserService {
         throw new UserDuplicateException(credentials.getUsername());
     }
 
-    /** make create new user*/
+    /** Loads a user by id, can throw an exception if
+     *  user with the passed id was not found
+     */
     @Override
     public UserModel loadById(long id) {
         return new UserModel(obtainUserById(id));
@@ -141,6 +143,7 @@ public class UserServiceImpl implements UserService {
 
         String reqUserName = req.getUsername().trim();
         if (!credentials.getUsername().equals(reqUserName)) {
+            assertUniqueUserName(reqUserName);
             credentials.setUsername(req.getUsername());
         }
 
@@ -153,12 +156,12 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Повторяющийся код сохранения, сохраняет модель пользователя с заполнением
-     * модели персональными данными и привязкой к группам
+     * saves user model with filling
+     * models of personal data and grouping
      *
-     * @param model     сущность пользователя
-     * @param userModel данные пользователя из запроса
-     * @return сущность пользователя сохраненная в системе
+     * @param model     instance of user
+     * @param userModel user data from the query
+     * @return user entity stored in the system
      */
     private User commonUserPersist(User model, NewUser userModel) {
         PersonalDetails personalDetails = createPersonalDetails(userModel);
