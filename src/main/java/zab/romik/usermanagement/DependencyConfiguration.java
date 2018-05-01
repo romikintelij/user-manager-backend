@@ -11,8 +11,8 @@ import zab.romik.usermanagement.usermanagement.users.UserService;
 import zab.romik.usermanagement.usermanagement.users.UserServiceImpl;
 
 /**
- * Наша архитектура практически не зависима от фреймворка, по-этому мы не
- * используем аннотации которые предоставляют возможности для работы с DI
+ * Our architecture is almost independent of the framework, so we do not
+ * use annotations that provide opportunities for working with DI
  *
  * @see org.springframework.beans.factory.annotation.Autowired
  * @see org.springframework.stereotype.Component
@@ -22,12 +22,13 @@ import zab.romik.usermanagement.usermanagement.users.UserServiceImpl;
 public class DependencyConfiguration {
 
     /**
-     * Этот метод создает сервис для работы с пользователями который доступен для
-     * внедрения на внешнем уровне архитектуры
      *
-     * @param springJpaUsers   реализация интерфейса которые требует бизнес логика
-     * @param groupsRepository репозиторий для работы с группами
-     * @return сервис для работы с пользователями
+     * This method creates a service for work with users that is available for
+     * implementation on the external level of architecture
+     *
+     * @param springJpaUsers   implementation of an interface that requires business logic
+     * @param groupsRepository repository for working with groups
+     * @return service for work with users
      */
     @Bean
     public UserService userService(UsersRepository springJpaUsers,
